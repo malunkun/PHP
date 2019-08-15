@@ -1,4 +1,4 @@
-<?php 
+<?php
 class systemTool{//系统工具类
 
 
@@ -30,7 +30,6 @@ class wifi{//wifi的设置以及已设置的信息获取
 		$wpaset       = "wpa=";
 		$channel      = "channel=";
 
-			
 		if(!copy($wifiConf,$bak_file)){//创建备份文件
 			echo "false";
 			return false;
@@ -42,7 +41,6 @@ class wifi{//wifi的设置以及已设置的信息获取
 			rename($bak_file,$wifiConf);//出错改回配置文件，避免配置文件丢失
 			return false;
 		}
-	
 		while(! feof($file))
 		{
 			$text = fgets($file);
@@ -55,11 +53,12 @@ class wifi{//wifi的设置以及已设置的信息获取
 				}
 				echo "<br>";
 				echo $str."<br>";
-				$str = str_replace($str,$wifiName."\n",$str);
-				echo $str."<br>";
-				fseek($file,$pos);//将文件指针移到相应位置
-				fwrite($file,$str);
-				echo fgets($file)."<br>";
+				$oldname = $str;
+				$newname = substr_replace($oldname,$wifiName,0);
+				echo $newname."<br>";
+				//fseek($file,$pos);//将文件指针移到相应位置
+				//fwrite($file,$str,20);
+				//echo fgets($file)."<br>";
 			}
 		}
 		unlink($bak_file);
@@ -68,8 +67,3 @@ class wifi{//wifi的设置以及已设置的信息获取
 }
 ?>
 
-<meta charset="utf-8">
-<?php
-$wifi = new wifi();
-$wifi->set("malunkun","123456789");
-?>
