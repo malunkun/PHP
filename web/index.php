@@ -1,7 +1,9 @@
-<meta charset="utf-8" >
-
 <?php
-include "test.php";
-$tool = new systemTool();
-echo $tool->getSystemDate();
+include_once "./systemctl.php";
+
+$wifi = new wifi;
+echo $wifi->getWifiName();
+echo $wifi->getWifiPasswd();
+echo $wifi->getWifiChannel();
+echo $wifi->getWifiWpakey();
 ?>
