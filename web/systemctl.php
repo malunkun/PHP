@@ -109,7 +109,7 @@ class wifi{//wifi的设置以及已设置的信息获取
             $filestr = fgets($file);
             if(stristr($filestr,self::nameset)){
                 fclose($file);
-                return str_replace(self::nameset,"",$filestr);
+                return str_replace("\n","",str_replace(self::nameset,"",$filestr));
             }
         }
         fclose($file);
@@ -123,7 +123,7 @@ class wifi{//wifi的设置以及已设置的信息获取
             $filestr = fgets($file);
             if(stristr($filestr,self::passwdset)){
                 fclose($file);
-                return str_replace(self::passwdset,"",$filestr);
+                return str_replace("\n","",str_replace(self::passwdset,"",$filestr));
             }
         }
         fclose($file);
@@ -137,7 +137,7 @@ class wifi{//wifi的设置以及已设置的信息获取
             $filestr = fgets($file);
             if(stristr($filestr,self::channelset)){
                 fclose($file);
-                return str_replace(self::channelset,"",$filestr);
+                return str_replace("\n","",str_replace(self::channelset,"",$filestr));
             }
         }
         fclose($file);
@@ -151,12 +151,16 @@ class wifi{//wifi的设置以及已设置的信息获取
             $filestr = fgets($file);
             if(stristr($filestr,self::wpakeyset)){
                 fclose($file);
-                return str_replace(self::wpakeyset,"",$filestr);
+                return str_replace("\n","",str_replace(self::wpakeyset,"",$filestr));
             }
         }
         fclose($file);
         return false;
     }
+}
+
+class wan{
+
 }
 ?>
 
