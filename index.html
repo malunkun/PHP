@@ -1,0 +1,19 @@
+​<html>
+<head>
+<meta charset="utf-8">
+<title>test page</title>
+</head>
+<head>
+<script>
+function validateForm(){
+var x=document.forms["myForm"]["fname"].value;
+}
+</script>
+</head>
+<body>
+<form name="myForm" action="test.php" onsubmit="return validateForm()" method="post">
+姓: <input type="text" name="fname">
+<input type="submit" value="提交">
+</form>
+</body>
+</html>
