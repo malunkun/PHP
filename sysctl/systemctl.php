@@ -13,11 +13,14 @@ class systemTool{//系统工具类
 			if($status != 0)
 				return false;
 			return $result[0];
-	}
+        }
+        function setSystemDate($format){
+            return true;
+        }
 }
 
 class wifi{//wifi的设置以及已设置的信息获取
-    const wifiConf = "/var/www/html/wifi.conf";//配置文件路径
+    const wifiConf = "./wifi.conf";//配置文件路径
 	const nameset	  = "ssid=";
     const passwdset	  = "wpa_passphrase=";
 	const channelset	  = "channel=";
