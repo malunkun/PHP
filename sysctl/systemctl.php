@@ -14,9 +14,44 @@ class systemTool{//系统工具类
 				return false;
 			return $result[0];
         }
-        function setSystemDate($format){
-            return true;
+        function setSystemDatebyntp($ntpserver){//未完成模块
+            $shell = "ntpdate ".$ntpserver;
+            exec($shell,$result,$status);
+            if($status != 0)
+                return false;
+            else
+                return true;
         }
+        function setSystemDate($date){
+            $shell = "date --set ".$date;
+            exec($shell,$result,$status);
+            if($status != 0)
+                return false;
+            else
+                return true;
+        }
+        function getMemUsed(){//返回内存使用率，未化为百分制
+            exec("free",$result,$status);
+            if($status != 0)
+                return false;
+            $str = preg_replace('/\s+/','/',$result[1]);
+            $result = explode("/",$str);
+            return (intval($result[1])-intval($result[3]))/intval($result[1]);
+        }
+        function getCpuUsed(){
+            $file = fopen("/proc/stat","r");
+            if($file == false)
+                return false;
+            $str = fgets($file);
+            $str = preg_replace('/\s+/','/',$str);
+            $result = explode("/",$str);
+            $sum = 0;
+            for($i=1;$i<count($result)-1;$i++){
+                $sum += $result[$i];
+            }
+            return ($sum-intval($result[4]))/$sum*100;
+        }
+
 }
 
 class wifi{//wifi的设置以及已设置的信息获取
@@ -163,7 +198,15 @@ class wifi{//wifi的设置以及已设置的信息获取
 }
 
 class wan{
+    /****getter****/
+    function getNetInfo(){
+        $info = array("DHCP","192.168.0.10","255.255.255.0","192.168.0.1","8.8.8.8");
+        return $info;
+    }
+    /****setter****/
+    function setNet(){
 
+    }
 }
 ?>
 
