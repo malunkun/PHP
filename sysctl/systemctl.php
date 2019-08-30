@@ -1,7 +1,5 @@
 <?php
-class systemTool{//系统工具类
-
-
+class systemTool{//系统工具
 		function reboot(){//重启，失败返回false
 			exec("reboot",$result,$status);
 			if($status != 0)
@@ -36,9 +34,9 @@ class systemTool{//系统工具类
                 return false;
             $str = preg_replace('/\s+/','/',$result[1]);
             $result = explode("/",$str);
-            return (intval($result[1])-intval($result[3]))/intval($result[1]);
+            return round((intval($result[1])-intval($result[3]))/intval($result[1])*100,2);
         }
-        function getCpuUsed(){
+        function getCpuUsed(){//cpu使用率
             $file = fopen("/proc/stat","r");
             if($file == false)
                 return false;
@@ -49,9 +47,26 @@ class systemTool{//系统工具类
             for($i=1;$i<count($result)-1;$i++){
                 $sum += $result[$i];
             }
-            return ($sum-intval($result[4]))/$sum*100;
+            return round(($sum-intval($result[4]))/$sum*100,2);
         }
-
+        function changePasswd($oldpasswd,$newpasswd){//更改管理员密码
+            $file = fopen("user.db","r");
+            if($file == false)
+                return false;
+            $filestr = str_replace("\n","",fgets($file));
+            fclose($file);
+            if(md5($oldpasswd) === $filestr){
+                $file = fopen("user.db","w");
+                if($file == false)
+                    return false;
+                if(fputs($file,md5($newpasswd)) != false){
+                    fclose($file);
+                    return true;
+                }else
+                    return false;
+            }else
+                return false;
+        }
 }
 
 class wifi{//wifi的设置以及已设置的信息获取
