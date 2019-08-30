@@ -4,8 +4,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $filestr = fgets($file);
     $oldpasswd = str_replace("\n","",$filestr);
     if($oldpasswd === strval(md5($_POST["login"])))
-        return true;
+        echo json_encode("true");
     else
-        return false;
+        echo json_encode("false");
 }
 ?>
