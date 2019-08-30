@@ -6,9 +6,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(!empty($_POST["netInfo"])){
         $info = $wan->getNetInfo();
         if($info != false){
-            return json_encode($info);
+            echo json_encode($info);
         }else
-            return false;
+            echo json_encode("false");
     }
 }
 ?>

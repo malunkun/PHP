@@ -1,5 +1,5 @@
 <?php
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST"){//postname: login
     $file = fopen("./user.db","r");
     $filestr = fgets($file);
     $oldpasswd = str_replace("\n","",$filestr);
