@@ -11,7 +11,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         echo json_encode($tool->setSystemDate($_POST[setDate]));
     if(!empty($_POST["changePasswd"])){//changePasswd数组,(0=>"oldpasswd",1=>"newpasswd")
         $passwd = $_POST["changePasswd"];
-        ehco json_encode($tool->changePasswd($passwd[0],$passwd[1]));
+        echo json_encode($tool->changePasswd($passwd[0],$passwd[1]));
     }
 }
 
