@@ -70,7 +70,7 @@ class systemTool{//系统工具
 }
 
 class wifi{//wifi的设置以及已设置的信息获取
-    const wifiConf = "./wifi.conf";//配置文件路径
+    const wifiConf = "/var/www/html/PHP/sysctl/wifi.conf";//配置文件路径
 	const nameset	  = "ssid=";
     const passwdset	  = "wpa_passphrase=";
 	const channelset	  = "channel=";
@@ -214,13 +214,126 @@ class wifi{//wifi的设置以及已设置的信息获取
 
 class wan{
     /****getter****/
-    function getNetInfo(){
-        $info = array("DHCP","192.168.0.10","255.255.255.0","192.168.0.1","8.8.8.8");
-        return $info;
+    function getNetType(){
+        $shell = "service dhcpcd status|grep 'Active'|awk '{print $3}'";
+        exec($shell,$result,$status);
+        if($status == 0){
+            if($result[0] == "(running)")
+                return "DHCP";
+            else
+                return "static";
+        }
+        else
+            return false;
+    }
+    function getMask(){
+        $shell = "ifconfig wlp2s0|grep 'netmask'|awk '{print $4}'";
+        exec($shell,$result,$status);
+        if($status == 0)
+            return $result[0];
+        else
+            return false;
+    }
+    function getIp(){
+        $shell = "ifconfig wlp2s0|grep 'netmask'|awk '{print $2}'";
+        exec($shell,$result,$status);
+        if($status == 0)
+            return $result[0];
+        else
+            return false;
+    }
+    function getRount(){
+        $shell = "ifconfig wlp2s0|grep 'netmask'|awk '{print $2}'";
+        exec($shell,$result,$status);
+        if($status == 0)
+            return preg_replace("/.[^.]*$/","",$result[0]).".1";
+        else
+            return false;
+    }
+    function getDns(){
+        $file = fopen("/var/www/html/PHP/sysctl/dnsmasq.conf","r");
+        if(!$file)
+            return false;
+        while(!feof($file)){
+            $filestr = fgets($file);
+            if(stristr($filestr,"server=")){
+                fclose($file);
+                return str_replace("\n","",str_replace("server=","",$filestr));
+            }
+        }
+        fclose($file);
+        return false;
     }
     /****setter****/
-    function setNet(){
 
+}
+class lan{
+    const conffile = "/var/www/html/PHP/sysctl/dnsmasq.conf";
+    /********getter*********/
+    function getStartIp(){
+        $shell = "cat /var/www/html/PHP/sysctl/dnsmasq.conf|grep 'dhcp-range='|cut -d'=' -f2|cut -d',' -f1";
+        exec($shell,$result,$status);
+        if($status == 0){
+            return $result[0];
+        }else
+            return false;
+    }
+    function getEndIp(){
+        $shell = "cat /var/www/html/PHP/sysctl/dnsmasq.conf|grep 'dhcp-range='|cut -d'=' -f2|cut -d',' -f2";
+        exec($shell,$result,$status);
+        if($status == 0){
+            return $result[0];
+        }else
+            return false;
+    }
+    function getTime(){
+        $shell = "cat /var/www/html/PHP/sysctl/dnsmasq.conf|grep 'dhcp-range='|cut -d'=' -f2|cut -d',' -f3";
+        exec($shell,$result,$status);
+        if($status == 0){
+            $hour = floatval(str_replace("h","",$result[0]));
+            return $hour*60;
+        }else
+            return false;
+    }
+    function getIp(){
+        $shell = "cat /var/www/html/PHP/sysctl/dnsmasq.conf|grep 'listen-address='|cut -d'=' -f2";
+        exec($shell,$result,$status);
+        if($status == 0)
+            return $result[0];
+        else
+            return false;
+    }
+    /******setter******/
+    function setDHCP($startIp,$endIp,$time){
+        $file = fopen(self::conffile,"r");
+        while(!feof($file)){
+            $filestr = fgets($file);
+            if(stristr($filestr,"dhcp-range=")){
+                $olddhcp =  $filestr;
+            }
+        }
+        fclose($file);
+        $allFile = file_get_contents(self::conffile);
+        $time = strval(intval($time)/60)."h";
+        $newset = $startIp.",".$endIp.",".$time."\n";
+        $allFile = str_replace($olddhcp,"dhcp-range=".$newset,$allFile);
+        file_put_contents(self::conffile,$allFile);
+        return true;
+    }
+    function setLanIp($ip){
+        $file = fopen(self::conffile,"r");
+        while(!feof($file)){
+            $filestr = fgets($file);
+            if(stristr($filestr,"listen-address=")){
+                $oldip =  $filestr;
+            }
+        }
+        fclose($file);
+        $allFile = file_get_contents(self::conffile);
+        $newset = "listen-address=".$ip."\n";
+        $allFile = str_replace($oldip,$newset,$allFile);
+        file_put_contents(self::conffile,$allFile);
+        return true;
     }
 }
 ?>

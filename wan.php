@@ -4,11 +4,13 @@ $wan = new wan;
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(!empty($_POST["netInfo"])){
-        $info = $wan->getNetInfo();
-        if($info != false){
-            echo json_encode($info);
-        }else
-            echo json_encode("false");
+        $type = $wan->getNetType();
+        $ip = $wan->getIp();
+        $mask = $wan->getMask();
+        $rount = $wan->getRount();
+        $dns = $wan->getDns();
+        $arr = array($type,$ip,$mask,$rount,$dns);
+        echo json_encode($arr);
     }
 }
 ?>
