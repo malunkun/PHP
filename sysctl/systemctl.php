@@ -1,4 +1,11 @@
 <?php
+function DHCPstart(){//开启DHCP
+    exec("service dnsmasq restart",$result,$status);
+    if($status == 0)
+        return true;
+    else
+        return false;
+}
 class systemTool{//系统工具
 		function reboot(){//重启，失败返回false
 			exec("reboot",$result,$status);
@@ -297,6 +304,14 @@ class lan{
     }
     function getIp(){
         $shell = "cat /var/www/html/PHP/sysctl/dnsmasq.conf|grep 'listen-address='|cut -d'=' -f2";
+        exec($shell,$result,$status);
+        if($status == 0)
+            return $result[0];
+        else
+            return false;
+    }
+    function getMac(){
+        $shell = "ifconfig enp3s0f1|grep 'ether'|awk '{print $2}'";
         exec($shell,$result,$status);
         if($status == 0)
             return $result[0];
